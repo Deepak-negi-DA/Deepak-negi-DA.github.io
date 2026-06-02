@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deepak Negi — Operations & Transformation Consultant</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f7f7f5; --bg3: #f0efe9;
+    --text: #1a1a18; --text2: #5f5e5a; --text3: #888780;
+    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
+    --radius-md: 8px; --radius-lg: 12px;
+    --blue: #378ADD; --green: #1D9E75; --teal: #5DCAA5;
+    --purple: #7F77DD; --pink: #D4537E; --amber: #EF9F27;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18; --bg2: #242421; --bg3: #2c2c2a;
+      --text: #f0efe9; --text2: #b4b2a9; --text3: #888780;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); font-size: 15px; line-height: 1.6; }
+  .wrap { max-width: 900px; margin: 2rem auto; background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  @media (max-width: 640px) { .wrap { margin: 0; border-radius: 0; border: none; } }
+
+  /* Hero */
+  .hero { padding: 2.5rem 2rem 2rem; border-bottom: 0.5px solid var(--border); }
+  .hero-eyebrow { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); margin-bottom: 0.6rem; }
+  .hero-name { font-size: 34px; font-weight: 600; line-height: 1.1; margin-bottom: 0.35rem; }
+  .hero-role { font-size: 15px; color: var(--text2); margin-bottom: 1.5rem; }
+  .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+  @media (max-width: 600px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+  .hstat { background: var(--bg2); border-radius: var(--radius-md); padding: 0.875rem 1rem; }
+  .hstat-val { font-size: 20px; font-weight: 600; margin-bottom: 2px; }
+  .hstat-lbl { font-size: 11px; color: var(--text3); }
+  .hero-contact { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--text2); }
+  .hero-contact a { color: var(--text2); text-decoration: none; display: flex; align-items: center; gap: 5px; }
+  .hero-contact a:hover { color: var(--blue); }
+  .hero-contact span { display: flex; align-items: center; gap: 5px; }
+
+  /* Nav */
+  .nav { display: flex; gap: 0; border-bottom: 0.5px solid var(--border); overflow-x: auto; background: var(--bg); }
+  .nav-btn { padding: 0.75rem 1.25rem; font-size: 13px; background: none; border: none; cursor: pointer; color: var(--text2); border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.15s; font-family: inherit; }
+  .nav-btn.active { color: var(--text); border-bottom: 2px solid var(--text); font-weight: 500; }
+  .nav-btn:hover { color: var(--text); }
+
+  /* Sections */
+  .section { padding: 2rem; display: none; }
+  .section.active { display: block; }
+  .sec-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 1.25rem; }
+
+  /* Charts */
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+  @media (max-width: 600px) { .chart-grid { grid-template-columns: 1fr; } }
+  .chart-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .chart-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .chart-sub { font-size: 11px; color: var(--text3); margin-bottom: 0.875rem; }
+  .legend-row { display: flex; gap: 14px; margin-bottom: 0.875rem; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
+  .legend-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* Scorecard bars */
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.7rem; }
+  .bar-label { font-size: 12px; color: var(--text2); width: 130px; flex-shrink: 0; text-align: right; }
+  @media (max-width: 480px) { .bar-label { width: 90px; font-size: 11px; } }
+  .bar-track { flex: 1; height: 7px; background: var(--bg2); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.9s ease; }
+  .bar-val { font-size: 12px; font-weight: 500; width: 50px; }
+
+  /* Case cards */
+  .sector-tabs { display: flex; gap: 7px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .stab { padding: 5px 13px; border-radius: 999px; font-size: 12px; border: 0.5px solid var(--border2); cursor: pointer; background: none; color: var(--text2); font-family: inherit; transition: all 0.15s; }
+  .stab.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .case-card { border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem; margin-bottom: 0.875rem; cursor: pointer; transition: border-color 0.15s; }
+  .case-card:hover { border-color: var(--border2); }
+  .case-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; gap: 10px; }
+  .case-sector { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; flex-shrink: 0; }
+  .case-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .case-sub { font-size: 12px; color: var(--text2); }
+  .case-metrics { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 0.875rem; }
+  .cmet-val { font-size: 17px; font-weight: 600; }
+  .cmet-lbl { font-size: 11px; color: var(--text3); }
+  .case-body { margin-top: 1.1rem; display: none; border-top: 0.5px solid var(--border); padding-top: 1rem; }
+  .case-body.open { display: block; }
+  .case-insight { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 0.65rem; font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .case-insight i { font-size: 15px; margin-top: 2px; flex-shrink: 0; color: var(--text3); }
+  .expand-hint { font-size: 11px; color: var(--text3); margin-top: 0.5rem; }
+
+  /* Skills */
+  .skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
+  @media (max-width: 560px) { .skill-grid { grid-template-columns: 1fr; } }
+  .skill-cat { background: var(--bg2); border-radius: var(--radius-md); padding: 1rem; }
+  .skill-cat-title { font-size: 12px; font-weight: 500; margin-bottom: 0.7rem; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+  .skill-pills { display: flex; flex-wrap: wrap; gap: 5px; }
+  .skill-pill { font-size: 11px; padding: 3px 9px; border-radius: 999px; border: 0.5px solid var(--border2); color: var(--text2); background: var(--bg); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 1.5rem; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 0.5px; background: var(--border2); }
+  .tl-item { position: relative; margin-bottom: 1.5rem; }
+  .tl-dot { position: absolute; left: -1.5rem; top: 5px; width: 9px; height: 9px; border-radius: 50%; background: var(--text); transform: translateX(-4px); }
+  .tl-date { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+  .tl-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .tl-sub { font-size: 13px; color: var(--text2); }
+
+  /* Certs */
+  .cert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  @media (max-width: 560px) { .cert-grid { grid-template-columns: 1fr; } }
+  .cert-item { padding: 0.8rem 1rem; border: 0.5px solid var(--border); border-radius: var(--radius-md); font-size: 13px; display: flex; align-items: center; gap: 9px; color: var(--text2); }
+  .cert-item i { font-size: 17px; color: var(--text3); flex-shrink: 0; }
+
+  /* Summary */
+  .summary-text { font-size: 14px; color: var(--text2); line-height: 1.8; margin-bottom: 2rem; }
+
+  /* Footer */
+  footer { padding: 1.25rem 2rem; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--text3); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Operations & Transformation Consulting · Lean Six Sigma Green Belt</div>
+    <div class="hero-name">Deepak Negi</div>
+    <div class="hero-role">Operations & Transformation Consultant · Analytics & Digital MIS · Gemba Concepts</div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">5</div><div class="hstat-lbl">Sectors delivered</div></div>
+      <div class="hstat"><div class="hstat-val">+17%</div><div class="hstat-lbl">Peak throughput gain</div></div>
+      <div class="hstat"><div class="hstat-val">−55%</div><div class="hstat-lbl">Changeover reduction</div></div>
+      <div class="hstat"><div class="hstat-val">4</div><div class="hstat-lbl">Live BI dashboards</div></div>
+    </div>
+    <div class="hero-contact">
+      <a href="mailto:Negideepak159@gmail.com"><i class="ti ti-mail"></i> Negideepak159@gmail.com</a>
+      <span><i class="ti ti-phone"></i> +91-8923280696</span>
+      <a href="https://www.linkedin.com/in/deepak-negi" target="_blank"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>
+      <span><i class="ti ti-map-pin"></i> Open to PAN-India & Global</span>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav" role="tablist">
+    <button class="nav-btn active" onclick="showTab('impact',this)" role="tab">Impact metrics</button>
+    <button class="nav-btn" onclick="showTab('cases',this)" role="tab">Case studies</button>
+    <button class="nav-btn" onclick="showTab('skills',this)" role="tab">Skills & tools</button>
+    <button class="nav-btn" onclick="showTab('about',this)" role="tab">Profile</button>
+  </div>
+
+  <!-- IMPACT TAB -->
+  <div id="impact" class="section active">
+    <div class="sec-title">Quantified impact across sectors</div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-title">Before vs. after — key metrics</div>
+        <div class="chart-sub">Indexed to baseline (%) by engagement</div>
+        <div class="legend-row">
+          <div class="legend-item"><div class="legend-sq" style="background:#378ADD"></div>Before</div>
+          <div class="legend-item"><div class="legend-sq" style="background:#1D9E75"></div>After</div>
+        </div>
+        <div style="position:relative;height:200px"><canvas id="beforeAfterChart" role="img" aria-label="Before and after comparison chart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Process time reductions</div>
+        <div class="chart-sub">Percentage cut from baseline</div>
+        <div class="legend-row">
+          <div class="legend-item"><div class="legend-sq" style="background:#1D9E75"></div>% reduction</div>
+        </div>
+        <div style="position:relative;height:200px"><canvas id="reductionChart" role="img" aria-label="Process time reduction chart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:1.25rem">
+      <div class="chart-title">Cross-sector impact scorecard</div>
+      <div class="chart-sub">Key outcomes normalised for comparison</div>
+      <div style="margin-top:1rem">
+        <div class="bar-row"><div class="bar-label">MDF A-grade yield</div><div class="bar-track"><div class="bar-fill" style="width:92%;background:#378ADD"></div></div><div class="bar-val" style="color:#378ADD">76→92%</div></div>
+        <div class="bar-row"><div class="bar-label">MDF line availability</div><div class="bar-track"><div class="bar-fill" style="width:90%;background:#1D9E75"></div></div><div class="bar-val" style="color:#1D9E75">75→90%</div></div>
+        <div class="bar-row"><div class="bar-label">Pharma output uplift</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:#5DCAA5"></div></div><div class="bar-val" style="color:#5DCAA5">+10.2%</div></div>
+        <div class="bar-row"><div class="bar-label">Steel throughput</div><div class="bar-track"><div class="bar-fill" style="width:55%;background:#7F77DD"></div></div><div class="bar-val" style="color:#7F77DD">+17%</div></div>
+        <div class="bar-row"><div class="bar-label">Mill changeover</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:#D4537E"></div></div><div class="bar-val" style="color:#D4537E">−56%</div></div>
+        <div class="bar-row"><div class="bar-label">Batch search time</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:#EF9F27"></div></div><div class="bar-val" style="color:#EF9F27">−60%</div></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Sector coverage</div>
+      <div class="chart-sub">Manufacturing industries served</div>
+      <div style="position:relative;height:220px"><canvas id="sectorChart" role="img" aria-label="Radar chart of sector coverage"></canvas></div>
+    </div>
+  </div>
+
+  <!-- CASES TAB -->
+  <div id="cases" class="section">
+    <div class="sec-title">Engagement case studies — click any card to expand</div>
+    <div class="sector-tabs">
+      <button class="stab active" onclick="filterCases('all',this)">All</button>
+      <button class="stab" onclick="filterCases('pharma',this)">Pharma</button>
+      <button class="stab" onclick="filterCases('steel',this)">Steel</button>
+      <button class="stab" onclick="filterCases('mdf',this)">MDF / Composite</button>
+      <button class="stab" onclick="filterCases('textile',this)">Textile</button>
+    </div>
+
+    <div class="case-card" data-sector="mdf" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div><div class="case-title">MDF & Composite Board Manufacturing</div><div class="case-sub">Availability & quality transformation · Rushil Decor</div></div>
+        <span class="case-sector" style="background:#E6F1FB;color:#185FA5">MDF</span>
+      </div>
+      <div class="case-metrics">
+        <div class="cmet"><div class="cmet-val" style="color:#1D9E75">75→90%</div><div class="cmet-lbl">Line availability</div></div>
+        <div class="cmet"><div class="cmet-val" style="color:#378ADD">76→92%</div><div class="cmet-lbl">A-grade yield</div></div>
+        <div class="cmet"><div class="cmet-val" style="color:#7F77DD">8 depts</div><div class="cmet-lbl">Power BI coverage</div></div>
+      </div>
+      <div class="expand-hint">↓ Click to expand insights</div>
+      <div class="case-body">
+        <div class="case-insight"><i class="ti ti-tool"></i>Deployed structured RCA-CAPA framework and preventive maintenance programme, driving line availability from 75% to 90% — a 20% improvement.</div>
+        <div class="case-insight"><i class="ti ti-chart-bar"></i>Improved A-grade product yield from 76% to 92% through fishbone-driven root cause analysis and process discipline.</div>
+        <div class="case-insight"><i class="ti ti-layout-dashboard"></i>Engineered an 8-department executive Power BI dashboard enabling daily top-management review cycles.</div>
+        <div class="case-insight"><i class="ti ti-clipboard-check"></i>Implemented PFMEA framework across 7 production stages, covering failure modes and corrective actions plant-wide.</div>
+      </div>
+    </div>
+
+    <div class="case-card" data-sector="pharma" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div><div class="case-title">Pharmaceutical Manufacturing</div><div class="case-sub">OEE & production transformation · PE fund context</div></div>
+        <span class="case-sector" style="background:#EAF3DE;color:#3B6D11">Pharma</span>
+      </div>
+      <div class="case-metrics">
+        <div class="cmet"><div class="cmet-val" style="color:#1D9E75">+10.2%</div><div class="cmet-lbl">Output uplift</div></div>
+        <div class="cmet"><div class="cmet-val" style="color:#378ADD">+2 days/mo</div><div class="cmet-lbl">Production recovered</div></div>
+        <div class="cmet"><div class="cmet-val" style="color:#7F77DD">CXO-level</div><div class="cmet-lbl">Dashboard built</div></div>
+      </div>
+      <div class="expand-hint">↓ Click to expand insights</div>
+      <div class="case-body">
+        <div class="case-insight"><i class="ti ti-trending-up"></i>Delivered a 10.2% production output uplift — the plant's historical peak — through workflow redesign and systematic downtime elimination.</div>
+        <div class="case-insight"><i class="ti ti-report-analytics"></i>Designed and deployed a real-time CXO-level Power BI dashboard covering OEE, downtime pareto, and quality KPIs.</div>
+        <div class="case-insight"><i class="ti ti-shield-check"></i>Led GMP-compliant shopfloor digitisation aligned to EU/ANVISA standards, recovering 2+ production days per month.</div>
+        <div class="case-insight"><i class="ti ti-database"></i>Resolved SAP GR/moisture discrepancy for wood log batch management — recommended movement type 551 adjustments and yard discipline protocols.</div>
+      </div>
+    </div>
+
+    <div class="case-card" data-sector="steel" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div><div class="case-title">Steel Manufacturing</div><div class="case-sub">Throughput & machine availability improvement</div></div>
+        <span class="case-sector" style="background:#FAEEDA;color:#854F0B">Steel</span>
+      </div>
+      <div class="case-metrics">
+        <div class="cmet"><div class="cmet-val" style="color:#1D9E75">+17%</div><div class="cmet-lbl">Throughput</div></div>
+        <div class="cmet"><div class="cmet-val" style="color:#378ADD">−55%</div><div class="cmet-lbl">Changeover time</div></div>
+        <div class="cmet"><div class="cmet-val" style="color:#7F77DD">+15%</div><div class="cmet-lbl">Machine availability</div></div>
+      </div>
+      <div class="expand-hint">↓ Click to expand insights</div>
+      <div class="case-body">
+        <div class="case-insight"><i class="ti ti-settings-2"></i>Achieved 17% throughput increase and 15% machine availability improvement through rigorous RCA and bottleneck elimination.</div>
+        <div class="case-insight"><i class="ti ti-clock"></i>Reduced changeover time by 55% using SMED: mill line from 90 min → 40 min; slitting line from 120 min → 50 min.</div>
+        <div class="case-insight"><i class="ti ti-table"></i>Built a digital MIS (Google Sheets + Looker Studio) replacing paper-based shift reporting entirely.</div>
+        <div class="case-insight"><i class="ti ti-git-branch"></i>Structured EBITDA impact analysis linking throughput and OEE gains to financial performance for management review.</div>
+      </div>
+    </div>
+
+    <div class="case-card" data-sector="textile" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div><div class="case-title">Textile Manufacturing</div><div class="case-sub">Manpower optimisation & digital enablement</div></div>
+        <span class="case-sector" style="background:#FBEAF0;color:#993556">Textile</span>
+      </div>
+      <div class="case-metrics">
+        <div class="cmet"><div class="cmet-val" style="color:#1D9E75">−60%</div><div class="cmet-lbl">Batch search time</div></div>
+        <div class="cmet"><div class="cmet-val" style="color:#378ADD">Plant-wide</div><div class="cmet-lbl">AppSheet rollout</div></div>
+        <div class="cmet"><div class="cmet-val" style="color:#7F77DD">Barcode</div><div class="cmet-lbl">Traceability system</div></div>
+      </div>
+      <div class="expand-hint">↓ Click to expand insights</div>
+      <div class="case-body">
+        <div class="case-insight"><i class="ti ti-barcode"></i>Reduced batch search time by ~60% through a barcode-based batch traceability system deployed across the shopfloor.</div>
+        <div class="case-insight"><i class="ti ti-device-mobile"></i>Designed and scaled an AppSheet low-code batch monitoring solution from prototype to plant-wide operational tool.</div>
+        <div class="case-insight"><i class="ti ti-users"></i>Optimised shopfloor manpower deployment through motion-time studies and task rebalancing across production cells.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS TAB -->
+  <div id="skills" class="section">
+    <div class="sec-title">Core skills & tools</div>
+    <div class="skill-grid" style="margin-bottom:1.5rem">
+      <div class="skill-cat">
+        <div class="skill-cat-title"><i class="ti ti-chart-dots" style="font-size:14px"></i> Analytics & BI</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Power BI (DAX)</span><span class="skill-pill">Alteryx</span><span class="skill-pill">Advanced Excel</span><span class="skill-pill">VBA</span><span class="skill-pill">Looker Studio</span><span class="skill-pill">MIS Architecture</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-title"><i class="ti ti-refresh" style="font-size:14px"></i> Operational excellence</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Lean Six Sigma GB</span><span class="skill-pill">OEE</span><span class="skill-pill">VSM</span><span class="skill-pill">5S</span><span class="skill-pill">Kaizen</span><span class="skill-pill">SMED</span><span class="skill-pill">Line Balancing</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-title"><i class="ti ti-clipboard-list" style="font-size:14px"></i> Process & performance</div>
+        <div class="skill-pills">
+          <span class="skill-pill">PFMEA</span><span class="skill-pill">TDPM</span><span class="skill-pill">RCA / CAPA</span><span class="skill-pill">Fishbone</span><span class="skill-pill">SOP Development</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-title"><i class="ti ti-cpu" style="font-size:14px"></i> Digital & automation</div>
+        <div class="skill-pills">
+          <span class="skill-pill">AppSheet</span><span class="skill-pill">Google Apps Script</span><span class="skill-pill">Shopfloor digitisation</span><span class="skill-pill">AI-assisted analysis</span>
+        </div>
+      </div>
+      <div class="skill-cat" style="grid-column:1/-1">
+        <div class="skill-cat-title"><i class="ti ti-bulb" style="font-size:14px"></i> Consulting & problem solving</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Hypothesis-driven analysis</span><span class="skill-pill">MECE</span><span class="skill-pill">Issue tree</span><span class="skill-pill">EBITDA impact</span><span class="skill-pill">CXO communication</span><span class="skill-pill">Structured problem solving</span>
+        </div>
+      </div>
+    </div>
+    <div class="sec-title">Tool proficiency</div>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div class="bar-row"><div class="bar-label">Power BI / DAX</div><div class="bar-track"><div class="bar-fill" style="width:90%;background:#378ADD"></div></div><div class="bar-val" style="color:#378ADD">Advanced</div></div>
+      <div class="bar-row"><div class="bar-label">Lean / Six Sigma</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:#1D9E75"></div></div><div class="bar-val" style="color:#1D9E75">Green Belt</div></div>
+      <div class="bar-row"><div class="bar-label">Alteryx</div><div class="bar-track"><div class="bar-fill" style="width:70%;background:#7F77DD"></div></div><div class="bar-val" style="color:#7F77DD">Certified</div></div>
+      <div class="bar-row"><div class="bar-label">AppSheet</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:#D4537E"></div></div><div class="bar-val" style="color:#D4537E">Production</div></div>
+      <div class="bar-row"><div class="bar-label">Excel / VBA</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:#EF9F27"></div></div><div class="bar-val" style="color:#EF9F27">Advanced</div></div>
+    </div>
+  </div>
+
+  <!-- ABOUT TAB -->
+  <div id="about" class="section">
+    <div class="sec-title">Professional summary</div>
+    <p class="summary-text">Results-driven Operations & Transformation Consultant with cross-sector experience across pharmaceutical, steel, textile, and composite/MDF manufacturing. Structures complex operational problems using hypothesis-driven frameworks, leads data-driven diagnostics, and delivers improvements that materially impact P&L. Translates shopfloor complexity into CXO-level decisions through executive dashboards and lean transformation programmes — uniquely positioned at the intersection of shopfloor execution and management consulting.</p>
+    <div class="sec-title">Career timeline</div>
+    <div class="timeline" style="margin-bottom:2rem">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">Jun 2024 – Present</div><div class="tl-title">Lean & Operations Consultant</div><div class="tl-sub">Gemba Concepts · Ahmedabad · Cross-sector transformation (Pharma, Steel, Textile, MDF)</div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-date">Aug 2023 – Sep 2023</div><div class="tl-title">Engineering Intern</div><div class="tl-sub">KIE Engineering Pvt Ltd · Roorkee · PPAP, NPD, AutoCAD, SolidWorks</div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-date">2020 – 2024</div><div class="tl-title">B.Tech — Mechanical Engineering</div><div class="tl-sub">Bipin Tripathi Kumaon Institute of Technology, Dwarahat · Graduated 2024</div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-date">Prior</div><div class="tl-title">Jawahar Navodaya Vidyalaya, Almora</div><div class="tl-sub">Senior secondary education</div></div>
+    </div>
+    <div class="sec-title">Certifications</div>
+    <div class="cert-grid">
+      <div class="cert-item"><i class="ti ti-certificate"></i>Lean Six Sigma Green Belt</div>
+      <div class="cert-item"><i class="ti ti-certificate"></i>Alteryx Foundation Micro-Credential</div>
+      <div class="cert-item"><i class="ti ti-certificate"></i>Business Analytics with Excel — Microsoft</div>
+      <div class="cert-item"><i class="ti ti-certificate"></i>Data Science and Analytics — HP</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Deepak Negi · Operations & Transformation Consultant</span>
+    <a href="mailto:Negideepak159@gmail.com" style="color:var(--text3);text-decoration:none">Negideepak159@gmail.com</a>
+  </footer>
+</div>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleCase(card) {
+  const body = card.querySelector('.case-body');
+  const hint = card.querySelector('.expand-hint');
+  body.classList.toggle('open');
+  hint.textContent = body.classList.contains('open') ? '↑ Click to collapse' : '↓ Click to expand insights';
+}
+function filterCases(sector, btn) {
+  document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.case-card').forEach(c => {
+    c.style.display = (sector === 'all' || c.dataset.sector === sector) ? 'block' : 'none';
+  });
+}
+
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const gridC = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+const tickC = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
+
+new Chart(document.getElementById('beforeAfterChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Pharma output', 'Steel throughput', 'MDF availability', 'MDF A-grade'],
+    datasets: [
+      { label: 'Before', data: [89.8, 83, 75, 76], backgroundColor: '#378ADD', borderRadius: 3 },
+      { label: 'After',  data: [100,  100, 90, 92], backgroundColor: '#1D9E75', borderRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: false, min: 68, max: 105, grid: { color: gridC }, ticks: { color: tickC, font: { size: 10 } } },
+      x: { grid: { display: false }, ticks: { color: tickC, font: { size: 10 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('reductionChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Mill changeover', 'Slitting changeover', 'Batch search'],
+    datasets: [{ label: '% reduction', data: [56, 58, 60], backgroundColor: ['#1D9E75','#5DCAA5','#9FE1CB'], borderRadius: 3 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, max: 75, grid: { color: gridC }, ticks: { color: tickC, font: { size: 10 }, callback: v => v + '%' } },
+      x: { grid: { display: false }, ticks: { color: tickC, font: { size: 10 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('sectorChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Pharma', 'Steel', 'Textile', 'MDF', 'Composite'],
+    datasets: [{
+      label: 'Engagement depth',
+      data: [5, 5, 4, 5, 4],
+      backgroundColor: 'rgba(55,138,221,0.12)',
+      borderColor: '#378ADD',
+      pointBackgroundColor: '#378ADD',
+      pointRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { r: {
+      min: 0, max: 5,
+      grid: { color: gridC },
+      ticks: { display: false },
+      pointLabels: { color: tickC, font: { size: 11 } }
+    }}
+  }
+});
+</script>
+</body>
+</html>
